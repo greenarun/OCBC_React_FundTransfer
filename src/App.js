@@ -1,24 +1,26 @@
-import logo from './logo.svg';
+import React, { useState } from 'react'
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Home from './Modules/Home/Home'
+import Login from './Modules/Login/Login'
+import Register from './Modules/Register/Register'
 import './App.css';
 
-function App() {
+const App = () => {
+  const [loggedIn, setloggedIn] = useState(false);
+  const [token, setToken] = useState()
+  const [name, setName] = useState('')
+  function callbackFunction(childData) {
+    setloggedIn(childData);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={loggedIn ? <Home token={token} name={name} /> : <Login parentCallback={callbackFunction} setToken={setToken} setName={setName} />} />
+        <Route path="/home" element={loggedIn ? <Home token={token} name={name} /> : <Navigate replace to="/" />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
